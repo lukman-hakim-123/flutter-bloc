@@ -4,6 +4,7 @@ import 'package:fbloc/cubit/counter_cubit.dart';
 import 'package:fbloc/cubit/cubit.dart';
 import 'package:fbloc/login/bloc/auth_bloc.dart';
 import 'package:fbloc/login/pages/login_page.dart';
+import 'package:fbloc/login/pages/my_bloc_observer.dart';
 import 'package:fbloc/provider.dart';
 import 'package:fbloc/stateful.dart';
 import 'package:fbloc/todolist/cubit/todo_cubit.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 //   ], child: const MyApp()));
 // }
 void main() {
+  Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
 }
 

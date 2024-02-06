@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -6,7 +8,13 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
-    on<AuthLoginRequested>((event, emit) async {
+    on<AuthLoginRequested>(_onAuthLoginRequested);
+    on<AuthLogoutRequested>(_onAuthLogoutRequested);
+  }
+
+  void _onAuthLoginRequested(
+      AuthLoginRequested event, Emitter<AuthState> emit) async {
+    try {
       final email = event.email;
       final password = event.password;
 
@@ -26,6 +34,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await Future.delayed(const Duration(seconds: 1), () {
         return emit(AuthSuccess(uid: '$email-$password'));
       });
-    });
+    } catch (e) {
+      return emit(AuthFailure(e.toString()));
+    }
+  }
+
+  void _onAuthLogoutRequested(
+      AuthLogoutRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await Future.delayed(const Duration(seconds: 1), () {
+        return emit(AuthInitial());
+      });
+    } catch (e) {
+      return emit(AuthFailure(e.toString()));
+    }
   }
 }
